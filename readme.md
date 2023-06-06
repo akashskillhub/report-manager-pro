@@ -1,3 +1,4 @@
+GITHUB Link => https://github.com/akashskillhub/report-manager-pro
 doctor
     register user
     can upload prev. reports
@@ -17,3 +18,28 @@ pathlogy
     history
 
 SASS -> multi tenant 
+
+
+doctor
+    page
+        dashboard
+        addTest
+        settings
+    components
+        navbar  -> info
+
+Admin
+    page
+        dashboard
+        addDoctor
+        addPathology
+        settings
+    components
+        navbar  -> primary
+Pathology
+    page
+        dashboard
+        Submit Report
+        settings
+    components
+        navbar  -> dark
