@@ -1,0 +1,6 @@
+export { default as Layout } from "./Layout"
+export { default as Navbar } from "./components/Navbar"
+export { default as AddDoctor } from "./pages/AddDoctor"
+export { default as AddPathology } from "./pages/AddPathology"
+export { default as Dashboard } from "./pages/Dashboard"
+export { default as Settings } from "./pages/Settings"

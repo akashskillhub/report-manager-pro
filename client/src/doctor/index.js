@@ -1,0 +1,5 @@
+export { default as DoctorLayout } from "./DoctorLayout"
+export { default as Navbar } from "./components/Navbar"
+export { default as Addtest } from "./pages/Addtest"
+export { default as DoctorDashboard } from "./pages/DoctorDashboard"
+export { default as DoctorSettings } from "./pages/DoctorSettings"
