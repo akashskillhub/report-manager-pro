@@ -1,9 +1,18 @@
 import React, { useState } from 'react'
 import { useFormik } from "formik"
 import *as yup from 'yup'
+import { useDispatch, useSelector } from 'react-redux'
+import { registerUser } from '../../redux/actions/publicActions'
 
 const Register = () => {
     const [showForm, setShowForm] = useState(true)
+    const dispatch = useDispatch()
+    const { loading, error, register } = useSelector(state => state.public)
+
+    const handleRegister = () => {
+        // dispatch(registerUser())
+    }
+    if (loading) return <div class="spinner-border text-primary"></div>
     return <>
         <div className="d-flex justify-content-center gap-5">
             <h1 onClick={e => setShowForm(true)}>Doctor</h1>

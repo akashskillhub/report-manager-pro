@@ -4,6 +4,8 @@ import { Home, PublicLayout } from './public'
 import { Login, Register } from './share'
 import { Addtest, DoctorDashboard, DoctorLayout, DoctorSettings } from './doctor'
 import { PathologyDashboard, PathologyLayout, PathologySettings, SubmitReports } from './pathology'
+import { ToastContainer } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return <>
@@ -37,6 +39,7 @@ const App = () => {
         </>} />
 
       </Routes>
+      <ToastContainer />
     </BrowserRouter>
   </>
 }

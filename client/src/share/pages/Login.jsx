@@ -1,13 +1,19 @@
 import { useFormik } from 'formik'
-import React from 'react'
+import React, { useEffect } from 'react'
 import * as yup from 'yup'
 import { Link } from "react-router-dom"
+import { useDispatch, useSelector } from 'react-redux'
+import { loginUser } from '../../redux/actions/publicActions'
+import { toast } from 'react-toastify'
+import { invalidate } from '../../redux/slices/publicSlice'
 
 const Login = () => {
+    const dispatch = useDispatch()
+    const { loading, error, login } = useSelector(state => state.public)
     const formik = useFormik({
         initialValues: ({
-            email: "",
-            password: "",
+            email: "john@gmail.com",
+            password: "123",
             account: "doctor"
         }),
         validationSchema: yup.object({
@@ -17,9 +23,21 @@ const Login = () => {
         }),
         onSubmit: (value, restForm) => {
             // restForm(),
-            console.log(value);
+            dispatch(loginUser(value))
         }
     })
+
+    useEffect(() => {
+        if (login) {
+            toast.success("Login Success")
+            dispatch(invalidate(["login"]))
+        }
+        if (error) {
+            toast.error(error)
+            dispatch(invalidate(["error"]))
+        }
+    }, [login, error])
+    if (loading) return <div class="spinner-border text-primary"></div>
 
     return <>
         <div className="container my-3">
