@@ -10,13 +10,9 @@ const PORT = process.env.PORT || 5000
 app.use(express.json())
 
 app.use("/api/admin", require("./routes/adminRoutes"))
-// app.use((err, req, res) => {
-//     if (err.status === 500) {
-//         return res.status(500).json({
-//             message: "error " + err,
-//         })
-//     }
-// })
+app.use("/api/doctor", require("./routes/doctorRoutes"))
+app.use("/api/pathology", require("./routes/pathologyRoutes"))
+
 
 mongoose.connection.once("open", () => {
     console.log("Database Connected")
