@@ -7,19 +7,19 @@ const doctorSchema = mongoose.Schema({
     },
     hospitalName: {
         type: String,
-        required: true
+        // required: true
     },
     mobile: {
         type: Number,
-        required: true
+        // required: true
     },
     password: {
         type: String,
-        required: true
+        // required: true
     },
     gender: {
         type: String,
-        required: true
+        // required: true
     },
     email: {
         type: String,

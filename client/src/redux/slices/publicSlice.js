@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, registerUser } from "../actions/publicActions";
+import { continueWithGoogle, loginUser, logout, registerUser } from "../actions/publicActions";
 
 const publicSlice = createSlice({
     name: "public",
-    initialState: {},
+    initialState: {
+        login: JSON.parse(localStorage.getItem("info"))
+    },
     reducers: {
         invalidate: (state, { payload }) => {
             payload.forEach(item => {
@@ -31,6 +33,31 @@ const publicSlice = createSlice({
             state.login = true
         })
         .addCase(loginUser.rejected, (state, { payload }) => {
+            state.loading = false
+            state.error = payload
+        })
+
+        .addCase(continueWithGoogle.pending, (state, { payload }) => {
+            state.loading = true
+        })
+        .addCase(continueWithGoogle.fulfilled, (state, { payload }) => {
+            state.loading = false
+            state.login = payload
+        })
+        .addCase(continueWithGoogle.rejected, (state, { payload }) => {
+            state.loading = false
+            state.error = payload
+        })
+
+
+        .addCase(logout.pending, (state, { payload }) => {
+            state.loading = true
+        })
+        .addCase(logout.fulfilled, (state, { payload }) => {
+            state.loading = false
+            state.login = false
+        })
+        .addCase(logout.rejected, (state, { payload }) => {
             state.loading = false
             state.error = payload
         })

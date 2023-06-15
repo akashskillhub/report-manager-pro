@@ -7,15 +7,15 @@ const pathologySchema = mongoose.Schema({
     },
     pathologyName: {
         type: String,
-        required: true
     },
     mobile: {
         type: Number,
-        required: true
+    },
+    email: {
+        type: String,
     },
     password: {
         type: String,
-        required: true
     },
     address: {
         type: String,

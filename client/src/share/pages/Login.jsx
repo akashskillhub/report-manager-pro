@@ -1,11 +1,14 @@
 import { useFormik } from 'formik'
 import React, { useEffect } from 'react'
 import * as yup from 'yup'
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from 'react-redux'
-import { loginUser } from '../../redux/actions/publicActions'
+import { continueWithGoogle, loginUser } from '../../redux/actions/publicActions'
 import { toast } from 'react-toastify'
 import { invalidate } from '../../redux/slices/publicSlice'
+
+import { GoogleLogin } from "react-google-login"
+import { gapi } from "gapi-script"
 
 const Login = () => {
     const dispatch = useDispatch()
@@ -30,13 +33,41 @@ const Login = () => {
     useEffect(() => {
         if (login) {
             toast.success("Login Success")
-            dispatch(invalidate(["login"]))
+            // dispatch(invalidate(["login"]))
         }
         if (error) {
             toast.error(error)
             dispatch(invalidate(["error"]))
         }
     }, [login, error])
+
+    useEffect(() => {
+        gapi.load("client:auth2", () => {
+            gapi.client.init({
+                clientId: "779552957341-u3n05o5dgmbgvduui9igdiiuce036fgm.apps.googleusercontent.com",
+                scope: ""
+            })
+        })
+
+    }, [])
+
+
+    const handleSuccess = (data) => {
+        console.log(data)
+        dispatch(continueWithGoogle({ ...data, account: formik.values.account }))
+    }
+    const handleFailure = err => {
+        console.log(err)
+    }
+    const navigate = useNavigate()
+    useEffect(() => {
+        if (login) {
+            login.account === "doctor"
+                ? navigate("/doctor")
+                : navigate("/pathology")
+        }
+    }, [login])
+
     if (loading) return <div class="spinner-border text-primary"></div>
 
     return <>
@@ -47,6 +78,14 @@ const Login = () => {
                         <div className="card-header fw-bold fs-3 text-bg-danger text-center">Login</div>
                         <form onSubmit={formik.handleSubmit}>
                             <div className="card-body">
+                                <GoogleLogin
+                                    buttonText={`Continue With Google as ${formik.values.account}`}
+                                    clientId='779552957341-u3n05o5dgmbgvduui9igdiiuce036fgm.apps.googleusercontent.com'
+                                    className='w-100 bg-primary text-light  my-4'
+                                    onSuccess={handleSuccess}
+                                    onFailure={handleFailure}
+                                />
+                                <hr />
                                 <div>
                                     <label htmlFor="email" className="form-label">Email</label>
                                     <input

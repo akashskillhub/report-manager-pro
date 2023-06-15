@@ -1,15 +1,16 @@
 const asyncHandler = require("express-async-handler")
 const Pathology = require("../models/Pathology")
-
+const bcrypt = require("bcrypt")
 
 exports.registerPathology = asyncHandler(async (req, res) => {
-    const result = await Pathology.create(req.body)
+    const hashPassword = await bcrypt.hash(req.body.password, 10)
+    const result = await Pathology.create({ ...req.body, password: hashPassword })
     res.json({
         message: "Pathology register successfully"
     })
 })
 exports.getAllPathology = asyncHandler(async (req, res) => {
-    const result = await Pathology.find()
+    const result = await Pathology.find().select("-password  -__v -createdAt -updatedAt ")
     res.json({
         message: "Pathology fetch successfully", result
     })

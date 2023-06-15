@@ -1,14 +1,21 @@
 const asyncHandler = require("express-async-handler")
 const Doctor = require("../models/Doctor")
 
+const bcrypt = require("bcrypt")
+const JWT = require("jsonwebtoken")
+const { OAuth2Client } = require("google-auth-library")
+
+
 exports.registerDoctor = asyncHandler(async (req, res) => {
-    const result = await Doctor.create(req.body)
+
+    const hashPassword = await bcrypt.hash(req.body.password, 10)
+    const result = await Doctor.create({ ...req.body, password: hashPassword })
     res.json({
         message: "Doctor register successfully"
     })
 })
 exports.getAllDoctor = asyncHandler(async (req, res) => {
-    const result = await Doctor.find()
+    const result = await Doctor.find().select(" -password  -__v -createdAt -updatedAt ")
     res.json({
         message: "Doctor fetch successfully", result
     })

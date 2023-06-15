@@ -6,6 +6,8 @@ import { Addtest, DoctorDashboard, DoctorLayout, DoctorSettings } from './doctor
 import { PathologyDashboard, PathologyLayout, PathologySettings, SubmitReports } from './pathology'
 import { ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
+import { DoctorProtected } from './share/components/Protected'
+import Tests from './admin/pages/Tests'
 
 const App = () => {
   return <>
@@ -20,9 +22,10 @@ const App = () => {
           <Route index element={<Dashboard />} />
           <Route path="add-doctor" element={<AddDoctor />} />
           <Route path="add-pathology" element={<AddPathology />} />
+          <Route path="add-tests" element={<Tests />} />
           <Route path="settings" element={<Settings />} />
         </Route>
-        <Route path="/doctor" element={<DoctorLayout />}>
+        <Route path="/doctor" element={<DoctorProtected compo={<DoctorLayout />} />}>
           <Route index element={<DoctorDashboard />} />
           <Route path='add-test' element={<Addtest />} />
           <Route path='settings' element={<DoctorSettings />} />
