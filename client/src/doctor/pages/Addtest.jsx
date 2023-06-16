@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
+import { useDispatch, useSelector } from "react-redux"
+import { getAllTests } from '../../redux/actions/adminActions'
+import { doctorGetAllTests } from '../../redux/actions/doctorActions'
 const AddTest = () => {
     const [data, setdata] = useState([{
         name: ""
     }])
-    // const [testdata, settestdata] = useState([])
-
-    // console.log(testData);
+    const [userData, setuserData] = useState({
+        test: []
+    })
 
     const CONTENT = <table class="table table-dark table-striped table-hover mt-3">
         <thead>
@@ -40,6 +43,27 @@ const AddTest = () => {
             }
         </tbody>
     </table>
+    const dispatch = useDispatch()
+    const { allTests } = useSelector(state => state.doctor)
+    useEffect(() => {
+        dispatch(doctorGetAllTests())
+
+    }, [])
+
+    const handleChange = e => {
+        if (e.target.checked) {
+            // push
+            setuserData({ ...userData, test: [...userData.test, e.target.value] })
+        } else {
+            const index = userData.test.findIndex(item => item === e.target.value)
+            console.log(index);
+            const copy = [...userData.test]
+            copy.splice(index, 1)
+            setuserData({ ...userData, test: copy })
+        }
+        // console.log(e.target.value)
+    }
+
 
     return <>
         <div className="my-3 container">
@@ -57,7 +81,35 @@ const AddTest = () => {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            ...
+                            <pre>{JSON.stringify(userData, null, 2)}</pre>
+
+                            <select
+                                class="form-select"
+                                value={userData.test}
+                                onChange={e => setuserData({ ...userData, test: e.target.value })}
+                            >
+                                <option value="">Choose Test</option>
+                                {
+                                    allTests && allTests.map(item => <option value={item.name}>
+                                        {item.name}
+                                    </option>)
+                                }
+                            </select>
+                            {
+                                allTests && allTests.map(item => <div class="form-check">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        onChange={handleChange}
+                                        value={item.name}
+                                        id={item.name} />
+                                    <label class="form-check-label" htmlFor={item.name}>
+                                        {item.name}
+                                    </label>
+                                </div>)
+                            }
+
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -76,6 +128,8 @@ const AddTest = () => {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+
+
 
                         </div>
                         <div class="modal-footer">

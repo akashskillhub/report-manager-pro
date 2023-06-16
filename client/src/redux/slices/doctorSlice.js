@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { updateDoctorProfile } from "../actions/doctorActions";
+import { doctorGetAllTests, updateDoctorProfile } from "../actions/doctorActions";
 
 const doctorSlice = createSlice({
     name: "doctor",
@@ -20,6 +20,18 @@ const doctorSlice = createSlice({
             state.update = true
         })
         .addCase(updateDoctorProfile.rejected, (state, { payload }) => {
+            state.loading = false
+            state.error = payload
+        })
+
+        .addCase(doctorGetAllTests.pending, (state, { payload }) => {
+            state.loading = true
+        })
+        .addCase(doctorGetAllTests.fulfilled, (state, { payload }) => {
+            state.loading = false
+            state.allTests = payload
+        })
+        .addCase(doctorGetAllTests.rejected, (state, { payload }) => {
             state.loading = false
             state.error = payload
         })

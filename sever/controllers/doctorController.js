@@ -4,6 +4,7 @@ const Doctor = require("../models/Doctor")
 const bcrypt = require("bcrypt")
 const JWT = require("jsonwebtoken")
 const { OAuth2Client } = require("google-auth-library")
+const Tests = require("../models/Tests")
 
 
 exports.registerDoctor = asyncHandler(async (req, res) => {
@@ -41,5 +42,12 @@ exports.deleteDoctor = asyncHandler(async (req, res) => {
     const result = await Doctor.findByIdAndDelete(doctorId)
     res.json({
         message: "Doctor Delete successfully", result
+    })
+})
+
+exports.getAllDoctorTests = asyncHandler(async (req, res) => {
+    const result = await Tests.find().select("   -__v -createdAt -updatedAt ")
+    res.json({
+        message: "Doctor Tests fetch successfully", result
     })
 })

@@ -1,4 +1,4 @@
-const { getAllDoctor, registerDoctor, destroyDoctor, updateDoctor, deleteDoctor } = require("../controllers/doctorController")
+const { getAllDoctor, registerDoctor, destroyDoctor, updateDoctor, deleteDoctor, getAllDoctorTests } = require("../controllers/doctorController")
 
 
 const router = require("express").Router()
@@ -9,6 +9,8 @@ router
     .delete("/destroy", destroyDoctor)
     .put("/update/:doctorId", updateDoctor)
     .delete("/delete/:doctorId", deleteDoctor)
+
+    .get("/test", getAllDoctorTests)
 
 
 module.exports = router

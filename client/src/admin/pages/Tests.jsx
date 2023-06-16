@@ -6,9 +6,9 @@ import { adminReset } from "../../redux/slices/adminSlice";
 
 const Test = () => {
     const [testData, setTestData] = useState({
-        name: "blood test",
-        mrp: 100,
-        doctorPrice: 50,
+        name: "THYROID",
+        mrp: 500,
+        doctorPrice: 200,
         category: "general physician",
         validity: "",
         gender: "",
@@ -45,11 +45,11 @@ const Test = () => {
         <table class="table table-dark table-striped table-hover">
             <thead>
                 <tr>
-                    <th >Name</th>
-                    <th >MRP</th>
-                    <th >Doctor Price</th>
-                    <th >Category</th>
-                    <th >Actions</th>
+                    <th>Name</th>
+                    <th>MRP</th>
+                    <th>Doctor Price</th>
+                    <th>Category</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
