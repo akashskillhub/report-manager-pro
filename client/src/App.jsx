@@ -8,12 +8,14 @@ import { ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 import { DoctorProtected } from './share/components/Protected'
 import Tests from './admin/pages/Tests'
+import Dummy from './Dummy'
 
 const App = () => {
   return <>
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<PublicLayout />}>
+          {/* <Route index element={<Dummy />} /> */}
           <Route index element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />

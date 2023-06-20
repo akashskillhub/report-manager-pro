@@ -1,6 +1,11 @@
 const mongoose = require("mongoose")
 
 const orderSchema = mongoose.Schema({
+    doctorId: {
+        type: mongoose.Types.ObjectId,
+        ref: "doctor",
+        required: true
+    },
     name: {
         type: String,
         required: true
@@ -17,12 +22,12 @@ const orderSchema = mongoose.Schema({
         type: Number,
         required: true
     },
-    // test: [
-    //     {
-    //         testId: mongoose.Types.ObjectId,
-    //         price: Number
-    //     }
-    // ],
+    test: [
+        {
+            testId: mongoose.Types.ObjectId,
+            price: Number
+        }
+    ],
     docs: [String]
 }, { timestamps: true })
 

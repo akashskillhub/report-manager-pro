@@ -72,7 +72,18 @@ const AddTest = () => {
     const handleChange = e => {
         if (e.target.checked) {
             // push
-            setuserData({ ...userData, test: [...userData.test, e.target.value] })
+            const selctedTest = allTests.find(item => item.name === e.target.value)
+            console.log(selctedTest)
+            // setuserData({ ...userData, test: [...userData.test, e.target.value] })
+            setuserData({
+                ...userData,
+                test: [
+                    ...userData.test,
+                    {
+                        testId: selctedTest._id,
+                        price: selctedTest.doctorPrice
+                    }]
+            })
         } else {
             const index = userData.test.findIndex(item => item === e.target.value)
             console.log(index);
@@ -98,7 +109,7 @@ const AddTest = () => {
         fd.append("dob", userData.dob)
         fd.append("gender", userData.gender)
         fd.append("mobile", userData.mobile)
-        fd.append("test", userData.test)
+        fd.append("test", JSON.stringify(userData.test))
         for (let i = 0; i < userData.docs.length; i++) {
             fd.append("docs", userData.docs[i])
         }

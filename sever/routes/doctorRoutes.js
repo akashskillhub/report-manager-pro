@@ -1,5 +1,6 @@
 const { addTestController, getAllOrderController } = require("../controllers/OrderController")
 const { getAllDoctor, registerDoctor, destroyDoctor, updateDoctor, deleteDoctor, getAllDoctorTests } = require("../controllers/doctorController")
+const { isDoctor } = require("../middlewares/authProtected")
 
 
 const router = require("express").Router()
