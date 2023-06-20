@@ -6,9 +6,9 @@ import { adminReset } from "../../redux/slices/adminSlice";
 
 const Test = () => {
     const [testData, setTestData] = useState({
-        name: "THYROID",
-        mrp: 500,
-        doctorPrice: 200,
+        name: "sugar",
+        mrp: 200,
+        doctorPrice: 50,
         category: "general physician",
         validity: "",
         gender: "",
@@ -153,10 +153,10 @@ const Test = () => {
                                 </label>
                                 <input
                                     onChange={(e) =>
-                                        setTestData({ ...testData, dprice: e.target.value })
+                                        setTestData({ ...testData, doctorPrice: e.target.value })
                                     }
-                                    value={testData.dprice}
-                                    name="dprice"
+                                    value={testData.doctorPrice}
+                                    name="doctorPrice"
                                     type="text"
                                     class="form-control"
                                     id="dprice"

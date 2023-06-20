@@ -1,3 +1,4 @@
+const { addTestController, getAllOrderController } = require("../controllers/OrderController")
 const { getAllDoctor, registerDoctor, destroyDoctor, updateDoctor, deleteDoctor, getAllDoctorTests } = require("../controllers/doctorController")
 
 
@@ -11,6 +12,10 @@ router
     .delete("/delete/:doctorId", deleteDoctor)
 
     .get("/test", getAllDoctorTests)
+
+
+    .post("/test/add", addTestController)
+    .get("/orders", getAllOrderController)
 
 
 module.exports = router
