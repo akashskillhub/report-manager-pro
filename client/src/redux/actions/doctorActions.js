@@ -29,3 +29,12 @@ export const doctorAddTest = createAsyncThunk("doctor/test/add", async (testData
         return rejectWithValue((error.response && error.response.data.message || error.message) || "somthing went wrong")
     }
 })
+export const getDoctorOrders = createAsyncThunk("doctor/orders", async (testData, { rejectWithValue }) => {
+    try {
+        const { data } = await API.get(`/doctor/orders`)
+        return data.result
+    } catch (error) {
+        console.log(error.message)
+        return rejectWithValue((error.response && error.response.data.message || error.message) || "somthing went wrong")
+    }
+})

@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt")
 
 const jwt = require("jsonwebtoken")
 const Tests = require("../models/Tests")
+const Order = require("../models/Order")
 exports.registerAdmin = asyncHandler(async (req, res) => {
     const hashPassword = await bcrypt.hash(req.body.password, 10)
     const result = await Admin.create({ ...req.body, password: hashPassword })
@@ -69,6 +70,12 @@ exports.adminDeleteTest = asyncHandler(async (req, res) => {
 exports.adminDestroyTest = asyncHandler(async (req, res) => {
     await Tests.deleteMany()
     res.json({ message: "Test Destroyed successfully" })
+})
+
+// order
+exports.adminAllOrders = asyncHandler(async (req, res) => {
+    const result = await Order.find().populate("doctorId")
+    res.json({ message: "Orders Fetched successfully", result })
 })
 
 

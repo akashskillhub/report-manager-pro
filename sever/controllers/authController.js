@@ -30,7 +30,7 @@ exports.continueWithGoogle1 = asyncHandler(async (req, res) => {
 
 
         const token = JWT.sign({ id: result._id }, process.env.JWT_KEY)
-        res.cookie("jwt", token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true })
+        res.cookie("token", token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true })
         // login
         res.json({
             message: "login success",

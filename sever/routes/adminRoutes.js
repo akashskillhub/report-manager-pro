@@ -1,5 +1,5 @@
 const { destroyOrderController } = require("../controllers/OrderController")
-const { getAllAdmins, registerAdmin, destroyAdmins, loginAdmin, adminGetAllTests, adminAddTest, adminUpdateTest, adminDeleteTest, adminDestroyTest } = require("../controllers/adminController")
+const { getAllAdmins, registerAdmin, destroyAdmins, loginAdmin, adminGetAllTests, adminAddTest, adminUpdateTest, adminDeleteTest, adminDestroyTest, adminAllOrders } = require("../controllers/adminController")
 
 const router = require("express").Router()
 
@@ -14,6 +14,8 @@ router
     .put("/test/:testId", adminUpdateTest)
     .delete("/test/destroy", adminDestroyTest)
     .delete("/test/:testId", adminDeleteTest)
+
+    .get("/order", adminAllOrders)
     .delete("/order/destroy", destroyOrderController)
 
 module.exports = router

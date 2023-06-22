@@ -6,7 +6,7 @@ const { isDoctor } = require("../middlewares/authProtected")
 const router = require("express").Router()
 
 router
-    .get("/", getAllDoctor)
+    .get("/", isDoctor, getAllDoctor)
     .post("/register", registerDoctor)
     .delete("/destroy", destroyDoctor)
     .put("/update/:doctorId", updateDoctor)
@@ -16,7 +16,7 @@ router
 
 
     .post("/test/add", addTestController)
-    .get("/orders", getAllOrderController)
+    .get("/orders", isDoctor, getAllOrderController)
 
 
 module.exports = router

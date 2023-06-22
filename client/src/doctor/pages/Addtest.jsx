@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react'
 
 import { useDispatch, useSelector } from "react-redux"
 import { getAllTests } from '../../redux/actions/adminActions'
-import { doctorAddTest, doctorGetAllTests } from '../../redux/actions/doctorActions'
+import { doctorAddTest, doctorGetAllTests, getDoctorOrders } from '../../redux/actions/doctorActions'
 import { toast } from 'react-toastify'
 import { invalidate } from '../../redux/slices/doctorSlice'
 const AddTest = () => {
-    const [data, setdata] = useState([{
-        name: ""
-    }])
+
 
     const [userData, setuserData] = useState({
         test: [],
@@ -19,43 +17,11 @@ const AddTest = () => {
         docs: [],
         preview: []
     })
-
-    const CONTENT = <table class="table table-dark table-striped table-hover mt-3">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>name</th>
-                <th>email</th>
-                <th>priority</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-
-            {
-                data && data.map((item, i) =>
-
-                    <tr key={item._id}>
-                        <td>{i + 1}</td>
-                        <td>{item.task}</td>
-                        <td>{item.desc}</td>
-                        <td>{item.priority}</td>
-                        {/* <td>{item.action}</td> */}
-                        <td>
-                            <button data-bs-toggle="modal" data-bs-target="#editModal"
-                                type="button" class="btn btn-warning me-2">Edit</button>
-                            <button data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                type="button" class="btn btn-danger">Delete</button>
-                        </td>
-                    </tr>
-                )
-            }
-        </tbody>
-    </table>
     const dispatch = useDispatch()
-    const { allTests, loading, error, addTest } = useSelector(state => state.doctor)
+    const { allTests, loading, error, addTest, orders } = useSelector(state => state.doctor)
     useEffect(() => {
         dispatch(doctorGetAllTests())
+        dispatch(getDoctorOrders())
     }, [])
     useEffect(() => {
         if (error) {
@@ -116,6 +82,42 @@ const AddTest = () => {
         dispatch(doctorAddTest(fd))
 
     }
+
+    const CONTENT = <table class="table table-dark table-striped table-hover mt-3">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>name</th>
+                <th>gender</th>
+                <th>dob</th>
+                {/* <th>test</th> */}
+                <th>docs</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {
+                orders && orders.map((item, i) =>
+
+                    <tr key={item._id}>
+                        <td>{i + 1}</td>
+                        <td>{item.name}</td>
+                        <td>{item.gender}</td>
+                        <td>{item.dob}</td>
+                        {/* <td>{item.test}</td> */}
+                        <td>{item.docs}</td>
+                        <td>
+                            <button data-bs-toggle="modal" data-bs-target="#editModal"
+                                type="button" class="btn btn-warning me-2">Edit</button>
+                            <button data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                type="button" class="btn btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                )
+            }
+        </tbody>
+    </table>
 
 
     return <>

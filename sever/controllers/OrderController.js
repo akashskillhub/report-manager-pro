@@ -10,11 +10,11 @@ exports.addTestController = asyncHandler(async (req, res) => {
         }
 
         // isLogin start
-        const { jwt } = req.cookies
-        if (!jwt) {
+        const { token } = req.cookies
+        if (!token) {
             return res.status(401).json({ message: "Please Login" })
         }
-        jsonwebtoken.verify(jwt, process.env.JWT_KEY, async (err, decode) => {
+        jsonwebtoken.verify(token, process.env.JWT_KEY, async (err, decode) => {
             if (err) {
                 return res.status(401).json({ message: "Invalid Token" })
             }
@@ -41,7 +41,7 @@ exports.addTestController = asyncHandler(async (req, res) => {
 })
 exports.getAllOrderController = asyncHandler(async (req, res) => {
     console.log(req.body);
-    const result = await Order.find()
+    const result = await Order.find({ doctorId: req.body.doctorId }).populate("doctorId", "name")
     res.json({ message: "Order Fetch Successfully", result })
 
 })
