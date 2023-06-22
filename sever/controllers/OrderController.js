@@ -27,11 +27,11 @@ exports.addTestController = asyncHandler(async (req, res) => {
             // next()
             const docs = []
             for (let i = 0; i < req.files.length; i++) {
-                docs.push(req.files[i].path)
+                docs.push(req.files[i].filename)
             }
             await Order.create({ ...req.body, test: JSON.parse(req.body.test), docs })
             res.json({ message: "Order Placed Successfully" })
-
+            // 
         })
         // isLogin end 
 

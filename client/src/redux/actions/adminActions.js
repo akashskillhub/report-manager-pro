@@ -38,6 +38,15 @@ export const getAllTests = createAsyncThunk("admin/test/fetch", async (testData,
         return rejectWithValue((error.response && error.response.data.message || error.message) || "somthing went wrong")
     }
 })
+export const adminGetAllOrders = createAsyncThunk("admin/orders/fetch", async (testData, { rejectWithValue }) => {
+    try {
+        const { data } = await API.get(`/admin/orders`)
+        return data.result
+    } catch (error) {
+        console.log(error.message)
+        return rejectWithValue((error.response && error.response.data.message || error.message) || "somthing went wrong")
+    }
+})
 
 
 

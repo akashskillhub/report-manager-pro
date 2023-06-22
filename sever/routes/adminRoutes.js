@@ -15,7 +15,7 @@ router
     .delete("/test/destroy", adminDestroyTest)
     .delete("/test/:testId", adminDeleteTest)
 
-    .get("/order", adminAllOrders)
+    .get("/orders", adminAllOrders)
     .delete("/order/destroy", destroyOrderController)
 
 module.exports = router

@@ -16,6 +16,7 @@ const Navbar = () => {
             <Link to="/admin/add-pathology" class="nav-link" >AddPathology</Link>
             <Link to="/admin/add-tests" class="nav-link" >Tests</Link>
             <Link to="/admin/settings" class="nav-link" >Settings</Link>
+            <Link to="/admin/orders" class="nav-link" >Orders</Link>
           </div>
         </div>
       </div>

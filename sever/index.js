@@ -14,9 +14,10 @@ app.use(cookieParser())
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
-                        
-})) 
+
+}))
 app.use(express.json())
+app.use(express.static("uploads"))
 
 app.use("/api/dummy", require("./routes/dummyRoute"))
 app.use("/api/admin", require("./routes/adminRoutes"))

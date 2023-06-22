@@ -1,5 +1,5 @@
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
-import { AddDoctor, AddPathology, Dashboard, Layout, Settings } from './admin'
+import { AddDoctor, AddPathology, Dashboard, Layout, Orders, Settings } from './admin'
 import { Home, PublicLayout } from './public'
 import { Login, Register } from './share'
 import { Addtest, DoctorDashboard, DoctorLayout, DoctorSettings } from './doctor'
@@ -26,6 +26,7 @@ const App = () => {
           <Route path="add-pathology" element={<AddPathology />} />
           <Route path="add-tests" element={<Tests />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="orders" element={<Orders />} />
         </Route>
         <Route path="/doctor" element={<DoctorProtected compo={<DoctorLayout />} />}>
           <Route index element={<DoctorDashboard />} />
