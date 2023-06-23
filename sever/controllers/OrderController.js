@@ -27,7 +27,10 @@ exports.addTestController = asyncHandler(async (req, res) => {
             // next()
             const docs = []
             for (let i = 0; i < req.files.length; i++) {
-                docs.push(req.files[i].filename)
+                let url = process.env.NODE_ENV === "development"
+                    ? process.env.DEV_URL
+                    : process.env.PRODUCTION_URL
+                docs.push(`${url}/${req.files[i].filename}`)
             }
             await Order.create({ ...req.body, test: JSON.parse(req.body.test), docs })
             res.json({ message: "Order Placed Successfully" })

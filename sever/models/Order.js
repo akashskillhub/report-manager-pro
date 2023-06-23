@@ -24,7 +24,10 @@ const orderSchema = mongoose.Schema({
     },
     test: [
         {
-            testId: mongoose.Types.ObjectId,
+            testId: {
+                type: mongoose.Types.ObjectId,
+                ref: "labtest"
+            },
             price: Number
         }
     ],

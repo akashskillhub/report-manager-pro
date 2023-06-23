@@ -47,6 +47,15 @@ export const adminGetAllOrders = createAsyncThunk("admin/orders/fetch", async (t
         return rejectWithValue((error.response && error.response.data.message || error.message) || "somthing went wrong")
     }
 })
+export const adminDeleteOrder = createAsyncThunk("admin/order/delete", async (orderData, { rejectWithValue }) => {
+    try {
+        const { data } = await API.delete(`/admin/orders/delete/${orderData._id}`)
+        return true
+    } catch (error) {
+        console.log(error.message)
+        return rejectWithValue((error.response && error.response.data.message || error.message) || "somthing went wrong")
+    }
+})
 
 
 
