@@ -50,6 +50,10 @@ exports.loginAdmin = asyncHandler(async (req, res) => {
 // test CRUD
 
 exports.adminAddTest = asyncHandler(async (req, res) => {
+    const isExist = await Tests.findOne({ name: req.body.name })
+    if (isExist) {
+        return res.status(400).json({ message: "test already exist" })
+    }
     const result = await Tests.create(req.body)
     res.json({ message: "Test Created successfully" })
 })
@@ -81,6 +85,11 @@ exports.adminDeleteOrder = asyncHandler(async (req, res) => {
     const { orderId } = req.params
     const result = await Order.findByIdAndDelete(orderId)
     res.json({ message: "Orders Deleted successfully" })
+})
+exports.adminUpdateOrder = asyncHandler(async (req, res) => {
+    const { orderId } = req.params
+    const result = await Order.findByIdAndUpdate(orderId, req.body)
+    res.json({ message: "Orders updated successfully" })
 })
 
 

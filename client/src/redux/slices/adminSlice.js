@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addTest, adminDeleteOrder, adminGetAllOrders, getAllTests, testDelete, testUpdate } from "../actions/adminActions";
+import { addTest, adminDeleteOrder, adminGetAllOrders, adminUpdateOrder, getAllTests, testDelete, testUpdate } from "../actions/adminActions";
 
 const adminSlice = createSlice({
     name: "admin",
@@ -80,6 +80,19 @@ const adminSlice = createSlice({
             state.orderDeleted = true
         })
         .addCase(adminDeleteOrder.rejected, (state, { payload }) => {
+            state.loading = false
+            state.error = payload
+        })
+
+
+        .addCase(adminUpdateOrder.pending, (state, { payload }) => {
+            state.loading = true
+        })
+        .addCase(adminUpdateOrder.fulfilled, (state, { payload }) => {
+            state.loading = false
+            state.orderUpdated = true
+        })
+        .addCase(adminUpdateOrder.rejected, (state, { payload }) => {
             state.loading = false
             state.error = payload
         })

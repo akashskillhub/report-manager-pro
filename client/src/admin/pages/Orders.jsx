@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { adminDeleteOrder, adminGetAllOrders } from '../../redux/actions/adminActions'
+import { adminDeleteOrder, adminGetAllOrders, adminUpdateOrder, getAllTests } from '../../redux/actions/adminActions'
 import { toast } from 'react-toastify'
 import { adminReset } from '../../redux/slices/adminSlice'
 
 const Orders = () => {
     const dispatch = useDispatch()
-    const { orders, loading, error, orderDeleted } = useSelector(state => state.admin)
+    const { orders, loading, error, orderDeleted, tests, orderUpdated } = useSelector(state => state.admin)
     useEffect(() => {
         if (error) {
             toast.error(error)
@@ -17,11 +17,49 @@ const Orders = () => {
             dispatch(adminReset(["orderDeleted"]))
             dispatch(adminGetAllOrders())
         }
-    }, [error, orderDeleted])
+        if (orderUpdated) {
+            toast.warn("Order Updated Successfully")
+            dispatch(adminReset(["orderUpdated"]))
+            dispatch(adminGetAllOrders())
+        }
+    }, [error, orderDeleted, orderUpdated])
     useEffect(() => {
         dispatch(adminGetAllOrders())
+        dispatch(getAllTests())
     }, [])
     const [selctedOrder, setSelctedOrder] = useState()
+
+    const handleChange = e => {
+        if (e.target.checked) {
+            // push
+            const selctedTest = tests.find(item => item.name === e.target.value)
+            console.log(selctedTest)
+            setSelctedOrder({
+                ...selctedOrder,
+                test: [
+                    ...selctedOrder.test,
+                    {
+                        testId: selctedTest._id,
+                        price: selctedTest.doctorPrice
+                    }]
+            })
+        } else {
+            const index = selctedOrder.test.findIndex(item => item === e.target.value)
+            console.log(index);
+            const copy = [...selctedOrder.test]
+            copy.splice(index, 1)
+            setSelctedOrder({ ...selctedOrder, test: copy })
+        }
+    }
+
+    const handleImage = e => {
+        const imgURL = []
+        for (let i = 0; i < e.target.files.length; i++) {
+            imgURL.push(URL.createObjectURL(e.target.files[i]))
+        }
+        setSelctedOrder({ ...selctedOrder, preview: imgURL })
+    }
+
 
     const TABLE = orders && <div className='table-responsive'>
         <table class="table table-dark table-striped table-hover">
@@ -149,6 +187,52 @@ const Orders = () => {
                                 <img src={item} height={50} alt="" />
                             </div>)
                         }
+
+                        <hr />
+                        <input multiple type="file" onChange={handleImage} />
+                        <br />
+                        {
+                            selctedOrder && selctedOrder.preview && selctedOrder.preview.map(item => <img src={item} height={100} alt="" />)
+                        }
+
+                        <hr />
+
+                        {
+                            (selctedOrder && tests) && tests.map(item => <div>
+                                <input
+                                    type="checkbox"
+                                    onChange={handleChange}
+                                    value={item.name}
+                                    checked={selctedOrder.test.find(t => item.name === t.testId.name)}
+                                    id={item.name} />
+                                <label htmlFor={item.name} className='mx-2'>{item.name}</label>
+                            </div>)
+                        }
+                        <div className='my-2'>
+                            <input
+                                checked={selctedOrder && selctedOrder.gender === "male"}
+                                type="radio"
+                                id='male'
+                                name='gender'
+                                value='male'
+                                onChange={e => setSelctedOrder({ ...selctedOrder, gender: e.target.value })}
+                            />
+                            <label htmlFor="male">male</label>
+                            <input
+                                checked={selctedOrder && selctedOrder.gender === "female"}
+                                type="radio"
+                                id='female'
+                                name='gender'
+                                value='female'
+                                onChange={e => setSelctedOrder({ ...selctedOrder, gender: e.target.value })}
+                            />
+                            <label htmlFor="female">female</label>
+                        </div>
+
+                    </div>
+
+                    <div>
+
                     </div>
 
                     <pre>
@@ -156,7 +240,11 @@ const Orders = () => {
                     </pre>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Update changes</button>
+                        <button
+                            data-bs-dismiss="modal"
+                            onClick={e => dispatch(adminUpdateOrder(selctedOrder))}
+                            type="button"
+                            class="btn btn-primary">Update changes</button>
                     </div>
                 </div>
             </div>
