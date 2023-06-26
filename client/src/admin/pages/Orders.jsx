@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { adminDeleteOrder, adminGetAllOrders, adminUpdateOrder, getAllTests } from '../../redux/actions/adminActions'
+import { adminDeleteOrder, adminGetAllOrders, adminGetAllPathology, adminUpdateOrder, getAllTests } from '../../redux/actions/adminActions'
 import { toast } from 'react-toastify'
 import { adminReset } from '../../redux/slices/adminSlice'
 
 const Orders = () => {
     const dispatch = useDispatch()
-    const { orders, loading, error, orderDeleted, tests, orderUpdated } = useSelector(state => state.admin)
+    const { orders, loading, error, orderDeleted, tests, orderUpdated, pathologies } = useSelector(state => state.admin)
     useEffect(() => {
         if (error) {
             toast.error(error)
@@ -26,8 +26,10 @@ const Orders = () => {
     useEffect(() => {
         dispatch(adminGetAllOrders())
         dispatch(getAllTests())
+        dispatch(adminGetAllPathology())
     }, [])
     const [selctedOrder, setSelctedOrder] = useState()
+    const [selectedPathology, setSelectedPathology] = useState()
 
     const handleChange = e => {
         if (e.target.checked) {
@@ -53,20 +55,41 @@ const Orders = () => {
     }
 
     const handleImage = e => {
+        console.log(e.target.files);
         const imgURL = []
         for (let i = 0; i < e.target.files.length; i++) {
             imgURL.push(URL.createObjectURL(e.target.files[i]))
         }
-        setSelctedOrder({ ...selctedOrder, preview: imgURL })
+        setSelctedOrder({
+            ...selctedOrder,
+            preview: imgURL,
+            newDocs: e.target.files
+        })
     }
 
+    const handleUpdateOrder = () => {
+        const fd = new FormData()
+        fd.append("name", selctedOrder.name)
+        fd.append("dob", selctedOrder.dob)
+        fd.append("gender", selctedOrder.gender)
+        fd.append("mobile", selctedOrder.mobile)
+        fd.append("test", JSON.stringify(selctedOrder.test))
+        fd.append("docs", JSON.stringify(selctedOrder.docs))
+        if (selctedOrder.newDocs) {
+            for (let i = 0; i < selctedOrder.newDocs.length; i++) {
+                fd.append("newDocs", selctedOrder.newDocs[i])
+            }
+        }
 
+        dispatch(adminUpdateOrder({ fd, id: selctedOrder._id }))
+    }
     const TABLE = orders && <div className='table-responsive'>
         <table class="table table-dark table-striped table-hover">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Dr. Name</th>
+                    <th>Pathology</th>
                     <th>Patient Name</th>
                     <th>Gender</th>
                     <th>DOB</th>
@@ -78,9 +101,37 @@ const Orders = () => {
             </thead>
             <tbody>
                 {
-                    orders.map((item, i) => <tr>
+                    orders.map((item, i) => <tr className={item.pathology ? 'table-info' : 'table-danger'}>
                         <td>{i + 1}</td>
                         <td>{item.doctorId.name}</td>
+                        <td>
+                            {
+                                item.pathology
+                                    ? <p>Pathology Already Assign</p>
+                                    : <>
+                                        {pathologies && <select
+                                            onChange={e => setSelectedPathology(e.target.value)}
+                                            class="form-select">
+                                            <option >Choose Pathology</option>
+                                            {
+                                                pathologies.map(item => <option
+                                                    value={item._id}>
+                                                    {item.name}
+                                                </option>)
+                                            }
+                                        </select>}
+                                        <button
+                                            onClick={e => dispatch(adminUpdateOrder({
+                                                ...item,
+                                                id: item._id,
+                                                pathology: selectedPathology,
+                                                action: "assign"
+                                            }))}
+                                            type="button"
+                                            class="btn btn-primary my-2">Assign</button>
+                                    </>
+                            }
+                        </td>
                         <td>{item.name}</td>
                         <td>{item.gender}</td>
                         <td>{item.dob}</td>
@@ -129,7 +180,7 @@ const Orders = () => {
 
         {/* delete modal  */}
 
-        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="deleteModal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -242,7 +293,7 @@ const Orders = () => {
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button
                             data-bs-dismiss="modal"
-                            onClick={e => dispatch(adminUpdateOrder(selctedOrder))}
+                            onClick={handleUpdateOrder}
                             type="button"
                             class="btn btn-primary">Update changes</button>
                     </div>

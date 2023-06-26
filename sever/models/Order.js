@@ -31,7 +31,16 @@ const orderSchema = mongoose.Schema({
             price: Number
         }
     ],
-    docs: [String]
+    docs: [String],
+    pathology: {
+        type: mongoose.Types.ObjectId,
+        ref: "pathology"
+    },
+    status: {
+        type: String,
+        enum: ["init", "assigned", "complete", "settled"],
+        default: "init"
+    }
 }, { timestamps: true })
 
 module.exports = mongoose.model("order", orderSchema)

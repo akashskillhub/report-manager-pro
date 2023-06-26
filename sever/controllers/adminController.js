@@ -2,10 +2,12 @@ const asyncHandler = require("express-async-handler")
 const Admin = require("../models/Admin")
 
 const bcrypt = require("bcrypt")
-
+const jsonwebtoken = require("jsonwebtoken")
 const jwt = require("jsonwebtoken")
 const Tests = require("../models/Tests")
 const Order = require("../models/Order")
+const Doctor = require("../models/Doctor")
+const { newDocUpload } = require("../utils/upload")
 exports.registerAdmin = asyncHandler(async (req, res) => {
     const hashPassword = await bcrypt.hash(req.body.password, 10)
     const result = await Admin.create({ ...req.body, password: hashPassword })
@@ -87,9 +89,36 @@ exports.adminDeleteOrder = asyncHandler(async (req, res) => {
     res.json({ message: "Orders Deleted successfully" })
 })
 exports.adminUpdateOrder = asyncHandler(async (req, res) => {
-    const { orderId } = req.params
-    const result = await Order.findByIdAndUpdate(orderId, req.body)
-    res.json({ message: "Orders updated successfully" })
+    if (req.body.action === "assign") {
+        const { orderId } = req.params
+        await Order.findByIdAndUpdate(orderId, req.body)
+        return res.json({ message: "Order updated Successfully" })
+    }
+    newDocUpload(req, res, async (err) => {
+
+        if (err) {
+            return res.status(400).json({
+                message: "multer Error " + err
+            })
+        }
+        const newDocs = []
+        if (req.files) {
+            for (let i = 0; i < req.files.length; i++) {
+                let url = process.env.NODE_ENV === "development"
+                    ? process.env.DEV_URL
+                    : process.env.PRODUCTION_URL
+                newDocs.push(`${url}/${req.files[i].filename}`)
+            }
+        }
+        const { orderId } = req.params
+        await Order.findByIdAndUpdate(orderId, {
+            ...req.body,
+            test: JSON.parse(req.body.test),
+            docs: [...JSON.parse(req.body.docs), ...newDocs]
+        })
+        res.json({ message: "Order updated Successfully" })
+        /* old code end*/
+    })
 })
 
 

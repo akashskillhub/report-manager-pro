@@ -8,9 +8,10 @@ const pathologySchema = mongoose.Schema({
     pathologyName: {
         type: String,
     },
-    mobile: {
-        type: Number,
-    },
+    mobile: [{
+        contactType: String,
+        contactNumber: Number
+    }],
     email: {
         type: String,
     },

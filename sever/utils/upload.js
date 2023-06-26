@@ -12,4 +12,6 @@ const docStorage = multer.diskStorage({
     }
 })
 
+
 exports.docUpload = multer({ storage: docStorage }).array("docs", 5)
+exports.newDocUpload = multer({ storage: docStorage }).array("newDocs", 5)

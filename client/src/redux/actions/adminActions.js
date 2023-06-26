@@ -58,13 +58,35 @@ export const adminDeleteOrder = createAsyncThunk("admin/order/delete", async (or
 })
 export const adminUpdateOrder = createAsyncThunk("admin/order/update", async (orderData, { rejectWithValue }) => {
     try {
-        const { data } = await API.put(`/admin/orders/update/${orderData._id}`, orderData)
+        const { data } = await API.put(`/admin/orders/update/${orderData.id}`, orderData.action === "assign" ? orderData : orderData.fd)
         return true
     } catch (error) {
         console.log(error.message)
         return rejectWithValue((error.response && error.response.data.message || error.message) || "somthing went wrong")
     }
 })
+
+// pathology start
+export const adminAddPathology = createAsyncThunk("admin/pathology/add", async (pathologyData, { rejectWithValue }) => {
+    try {
+        const { data } = await API.post(`/pathology/register`, pathologyData)
+        return true
+    } catch (error) {
+        console.log(error.message)
+        return rejectWithValue((error.response && error.response.data.message || error.message) || "somthing went wrong")
+    }
+})
+export const adminGetAllPathology = createAsyncThunk("admin/pathology/get", async (pathologyData, { rejectWithValue }) => {
+    try {
+        const { data } = await API.get(`/pathology`)
+        return data.result
+    } catch (error) {
+        console.log(error.message)
+        return rejectWithValue((error.response && error.response.data.message || error.message) || "somthing went wrong")
+    }
+})
+
+// pathology end
 
 
 

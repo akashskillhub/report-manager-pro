@@ -1,47 +1,60 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { adminAddPathology } from '../../redux/actions/adminActions'
+import { useDispatch, useSelector } from 'react-redux'
+import { adminReset } from '../../redux/slices/adminSlice'
+import { toast } from 'react-toastify'
 
 const AddPathology = () => {
 
 
+  const [pathologyData, setpathologyData] = useState({
+    name: "",
+    email: "",
+    gender: "male",
+    address: ""
+  })
 
-  /*
-    name
-    mobiile -> multiple
-    address
-    pathology name
-    avatar
-    
-  */
-  const table = <table class="table table-dark table-striped table-hover">
+  const dispatch = useDispatch()
+  const { loading, error, pathologies, pathologyAdded } = useSelector(state => state.admin)
+  const handleAddPathology = () => {
+    dispatch(adminAddPathology({ ...pathologyData, mobile }))
+  }
+  useEffect(() => {
+    if (pathologyAdded) {
+      toast.success("Pathology Added Successfully")
+      dispatch(adminReset(["pathologyAdded"]))
+    }
+    if (error) {
+      toast.error(["error"])
+    }
+  }, [error, pathologyAdded])
+
+
+  const table = <table className="table table-dark table-striped table-hover">
     <thead>
       <tr>
-        <th scope="col">#</th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
+        <th scope="col">Sr NO</th>
+        <th scope="col">Name</th>
+        <th scope="col">Pathology Name</th>
+        <th scope="col">Mobile No</th>
+        <th scope="col">Address</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>@mdo</td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>@fat</td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td colspan="2">Larry the Bird</td>
-        <td>@twitter</td>
-      </tr>
+
     </tbody>
   </table>
 
+
+
+  const [mobile, setMobile] = useState([
+    {
+      contactNumber: "8888888899",
+      contactType: "primary"
+    }
+  ])
+
+  if (loading) { return <div class="spinner-border text-primary"></div> }
   return <>
     <div className="container">
       <button className='btn btn-primary' data-bs-toggle="modal" data-bs-target="#pathoModal"> Add pathology</button>
@@ -54,23 +67,116 @@ const AddPathology = () => {
 
 
 
-    <div class="modal fade" id="pathoModal" >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="pathoModal">Add Doctor's details</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div className="modal fade" id="pathoModal" >
+      <div className="modal-dialog">
+        <div className="modal-content">
+          <div className="modal-header text-center">
+            <h5 className="modal-title" id="pathoModal">Add Pathology's details</h5>
+            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
-            <input className='form-control' type="text" name="" id="doctorName" placeholder='Enter pathology name' /><br />
-            <input className='form-control' type="text" name="" id="doctorEmail" placeholder='Enter pathology email' /><br />
-            <input className='form-control' type="text" name="" id="doctorMobile" placeholder='Enter pathology Mobile' /><br />
-            <input className='form-control' type="text" name="" id="doctorMobile" placeholder='Enter pathology lab Address' /><br />
+          <div className="modal-body">
+            <input value={pathologyData.name}
+              onChange={e => setpathologyData({ ...pathologyData, name: e.target.value })}
+              className='form-control' type="text" name="" id="name" placeholder='Enter Phlebo Name' /><br />
+            <input value={pathologyData.email}
+              onChange={e => setpathologyData({ ...pathologyData, email: e.target.value })}
+              className='form-control' type="text" name="" id="name" placeholder='Enter Phlebo Email' /><br />
+            <input value={pathologyData.address}
+              onChange={e => setpathologyData({ ...pathologyData, address: e.target.value })}
+              className='form-control' type="text" name="" id="name" placeholder='Enter Phlebo Address' /><br />
 
+            {
+              mobile.map((item, i) => <div>
+                <div className='input-group '>
+                  <input
+                    value={mobile[i].contactNumber}
+                    type='number'
+                    onChange={e => {
+                      const copy = [...mobile]
+                      copy[i].contactNumber = e.target.value
+                      setMobile(copy)
+                    }}
+                    className="form-control"
+                    id="mobile"
+                    placeholder='Enter Phlebo Mobile' />
+                  <select className="form-select" onChange={e => {
+                    const copy = [...mobile]
+                    copy[i].contactType = e.target.value
+                    setMobile(copy)
+                  }}>
+                    <option selected>Choose Type</option>
+                    <option value="primary">Primary</option>
+                    <option value="clinic">Secondary</option>
+                    <option value="home">Pathology Lab</option>
+                  </select>
+
+                  {
+                    i === 0 ? <button
+                      disabled={mobile.length >= 3}
+                      onClick={e => setMobile([...mobile,
+                      { contactNumber: "", contactType: "new mobile" }
+                      ])}
+                      type="button"
+                      className="btn btn-primary"
+                    >+</button>
+                      : <button
+                        onClick={e => {
+                          const copy = [...mobile]
+                          copy.splice(i, 1)
+                          setMobile(copy)
+                        }}
+                        type="button"
+                        className="btn btn-danger"
+                      >-</button>
+                  }
+                </div><br />
+              </div>)
+            }
+
+            <div className='d-flex gap-2'>
+              Gender :
+              <div className="form-check">
+                <input
+                  onChange={e => setpathologyData({
+                    ...pathologyData,
+                    gender: e.target.value
+                  })}
+                  checked={pathologyData.gender === "male"}
+                  className="form-check-input"
+                  type="radio"
+                  name='gender'
+                  value="male"
+                  id="male" />
+                <label
+                  className="form-check-label" htmlFor="male">  Male </label>
+              </div>
+              <div className="form-check">
+                <input
+                  onChange={e => setpathologyData({
+                    ...pathologyData,
+                    gender: e.target.value
+                  })}
+                  checked={pathologyData.gender === "female"}
+                  className="form-check-input"
+                  type="radio"
+                  name='gender'
+                  value="female"
+                  id="female" />
+                <label className="form-check-label" htmlFor="female">
+                  Famale
+                </label>
+
+              </div>
+            </div> <br />
+
+
+
+            <pre>{JSON.stringify(pathologyData, null, 2)}</pre>
+            <pre>{JSON.stringify(mobile, null, 2)}</pre>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" onClick={handleAddPathology} className="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
           </div>
         </div>
       </div>

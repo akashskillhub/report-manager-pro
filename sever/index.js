@@ -27,6 +27,7 @@ app.use("/api/auth", require("./routes/authRoutes"))
 
 
 app.use((err, req, res, next) => {
+    console.log(err)
     res.status(500).json({ message: err.message || "something went wrong" })
 })
 app.use((req, res) => {
@@ -39,4 +40,5 @@ mongoose.connection.once("open", () => {
 })
 mongoose.connection.on("error", err => {
     console.log("unable to connect database " + err)
+
 })
