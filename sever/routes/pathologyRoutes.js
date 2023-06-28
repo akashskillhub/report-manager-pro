@@ -1,4 +1,4 @@
-const { getAllPathology, registerPathology, destroyPathology, updatePathology, deletePathology, pathologyOrders } = require("../controllers/pathologoController")
+const { getAllPathology, registerPathology, destroyPathology, updatePathology, deletePathology, pathologyOrders, pathologyAcceptOrder, pathologyUploadReports } = require("../controllers/pathologoController")
 const { isPathology } = require("../middlewares/authProtected")
 
 
@@ -14,6 +14,8 @@ router
     .delete("/delete/:pathologyId", deletePathology)
 
     .get("/orders", isPathology, pathologyOrders)
+    .put("/orders/:orderId", isPathology, pathologyAcceptOrder)
+    .put("/orders/report/:orderId", isPathology, pathologyUploadReports)
 
 
 module.exports = router

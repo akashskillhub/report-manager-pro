@@ -1,4 +1,4 @@
-import { getPathologyOrders } from "../actions/PathologyActions";
+import { PathologyAcceptOrderAction, PathologyReportUploadAction, getPathologyOrders } from "../actions/PathologyActions";
 
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -25,7 +25,32 @@ const pathologySlice = createSlice({
             .addCase(getPathologyOrders.rejected, (state, { payload }) => {
                 state.loading = false;
                 state.error = payload;
-            });
+            })
+
+            .addCase(PathologyAcceptOrderAction.pending, (state, { payload }) => {
+                state.loading = true;
+            })
+            .addCase(PathologyAcceptOrderAction.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.accept = true;
+            })
+            .addCase(PathologyAcceptOrderAction.rejected, (state, { payload }) => {
+                state.loading = false;
+                state.error = payload;
+            })
+
+
+            .addCase(PathologyReportUploadAction.pending, (state, { payload }) => {
+                state.loading = true;
+            })
+            .addCase(PathologyReportUploadAction.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.reportUpload = true;
+            })
+            .addCase(PathologyReportUploadAction.rejected, (state, { payload }) => {
+                state.loading = false;
+                state.error = payload;
+            })
     },
 });
 

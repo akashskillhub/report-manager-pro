@@ -38,8 +38,11 @@ const orderSchema = mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ["init", "assigned", "complete", "settled"],
+        enum: ["init", "assigned", "accept", "complete", "settled"],
         default: "init"
+    },
+    reports: {
+        type: [String]
     }
 }, { timestamps: true })
 

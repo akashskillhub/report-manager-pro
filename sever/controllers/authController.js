@@ -64,7 +64,15 @@ exports.continueWithGoogle1 = asyncHandler(async (req, res) => {
 
         res.json({
             message: "register success",
-            result: { ...data, account }
+            // result: { ...data, account }
+            result: {
+                _id: data._id,
+                name: data.name,
+                email: data.email,
+                avatar: data.avatar,
+                active: data.active,
+                account
+            }
         })
 
     }

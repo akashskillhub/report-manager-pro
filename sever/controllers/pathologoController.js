@@ -2,6 +2,8 @@ const asyncHandler = require("express-async-handler")
 const Pathology = require("../models/Pathology")
 const bcrypt = require("bcrypt")
 const Order = require("../models/Order")
+const { reportUpload } = require("../utils/upload")
+const jsonwebtoken = require("jsonwebtoken")
 
 exports.registerPathology = asyncHandler(async (req, res) => {
     // const hashPassword = await bcrypt.hash(req.body.password, 10)
@@ -40,8 +42,58 @@ exports.deletePathology = asyncHandler(async (req, res) => {
     })
 })
 exports.pathologyOrders = asyncHandler(async (req, res) => {
-    const result = await Order.find({ pathology: req.body.pathologyId })
+    const result = await Order.find({ pathology: req.body.pathologyId }).populate("test.testId")
     res.json({
         message: "Pathology Order Fetched successfully", result
+    })
+})
+exports.pathologyAcceptOrder = asyncHandler(async (req, res) => {
+    const { orderId } = req.params
+    const result = await Order.findByIdAndUpdate(orderId, {
+        status: "accept"
+    }, {
+        new: true
+    })
+    res.json({
+        message: "Pathology Order Status Update successfully",
+        result
+    })
+})
+exports.pathologyUploadReports = asyncHandler(async (req, res) => {
+
+
+    reportUpload(req, res, async err => {
+        if (err) {
+            res.status(400).json({ message: "multer error " + err })
+        }
+
+        // isLogin start
+        const { token } = req.cookies
+        if (!token) {
+            return res.status(401).json({ message: "Please Login" })
+        }
+        jsonwebtoken.verify(token, process.env.JWT_KEY, async (err, decode) => {
+            if (err) {
+                return res.status(401).json({ message: "Invalid Token" })
+            }
+            const result = await Pathology.findById(decode.id)
+            if (!result) {
+                return res.status(401).json({ message: "Pathology only route. you are not Pathology" })
+            }
+            req.body.pathologyId = result._id
+            console.log(req.body);
+            // next()
+            const reports = []
+            for (let i = 0; i < req.files.length; i++) {
+                let url = process.env.NODE_ENV === "development"
+                    ? process.env.DEV_URL
+                    : process.env.PRODUCTION_URL
+                reports.push(`${url}/${req.files[i].filename}`)
+            }
+            const { orderId } = req.params
+            await Order.findByIdAndUpdate(orderId, { reports })
+            res.json({ message: "report upload Successfully" })
+            // 
+        })
     })
 })

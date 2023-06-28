@@ -80,7 +80,7 @@ exports.adminDestroyTest = asyncHandler(async (req, res) => {
 
 // order
 exports.adminAllOrders = asyncHandler(async (req, res) => {
-    const result = await Order.find().populate("doctorId").populate("test.testId")
+    const result = await Order.find().populate("doctorId").populate("test.testId").populate("pathology")
     res.json({ message: "Orders Fetched successfully", result })
 })
 exports.adminDeleteOrder = asyncHandler(async (req, res) => {

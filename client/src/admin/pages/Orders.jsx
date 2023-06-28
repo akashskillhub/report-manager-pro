@@ -88,6 +88,7 @@ const Orders = () => {
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>Stauts</th>
                     <th>Dr. Name</th>
                     <th>Pathology</th>
                     <th>Patient Name</th>
@@ -103,11 +104,12 @@ const Orders = () => {
                 {
                     orders.map((item, i) => <tr className={item.pathology ? 'table-info' : 'table-danger'}>
                         <td>{i + 1}</td>
+                        <td>{item.status}</td>
                         <td>{item.doctorId.name}</td>
                         <td>
                             {
                                 item.pathology
-                                    ? <p>Pathology Already Assign</p>
+                                    ? <p>{item.pathology.name} </p>
                                     : <>
                                         {pathologies && <select
                                             onChange={e => setSelectedPathology(e.target.value)}
