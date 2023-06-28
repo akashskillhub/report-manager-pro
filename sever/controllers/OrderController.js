@@ -44,7 +44,7 @@ exports.addTestController = asyncHandler(async (req, res) => {
 })
 exports.getAllOrderController = asyncHandler(async (req, res) => {
     console.log(req.body);
-    const result = await Order.find({ doctorId: req.body.doctorId }).populate("doctorId", "name")
+    const result = await Order.find({ doctorId: req.body.doctorId }).populate("doctorId", "name").populate("test.testId")
     res.json({ message: "Order Fetch Successfully", result })
 
 })

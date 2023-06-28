@@ -90,7 +90,8 @@ const AddTest = () => {
                 <th>name</th>
                 <th>gender</th>
                 <th>dob</th>
-                {/* <th>test</th> */}
+                <th>test</th>
+                <th>Reports</th>
                 <th>docs</th>
                 <th>Actions</th>
             </tr>
@@ -100,12 +101,15 @@ const AddTest = () => {
             {
                 orders && orders.map((item, i) =>
 
-                    <tr key={item._id}>
+                    <tr key={item._id} className={item.reports.length > 0 && "table-success"}>
                         <td>{i + 1}</td>
                         <td>{item.name}</td>
                         <td>{item.gender}</td>
                         <td>{item.dob}</td>
-                        {/* <td>{item.test}</td> */}
+                        <td>{item.test.map(t => <li>{t.testId.name}</li>)}</td>
+                        <td>{item.reports.map(r => <div>
+                            <img src={r} height={50} alt="" />
+                        </div>)}</td>
                         <td>{item.docs}</td>
                         <td>
                             <button data-bs-toggle="modal" data-bs-target="#editModal"

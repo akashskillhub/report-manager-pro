@@ -97,6 +97,7 @@ const Orders = () => {
                     <th>Mobile</th>
                     <th>Docs</th>
                     <th>Test</th>
+                    <th>Reports</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -154,6 +155,11 @@ const Orders = () => {
                                     </li>)
                                 }
                             </ol>
+                        </td>
+                        <td>
+                            {item.reports.map(i => <div>
+                                <img src={i} alt="" height={50} />
+                            </div>)}
                         </td>
                         <td>
                             <button
